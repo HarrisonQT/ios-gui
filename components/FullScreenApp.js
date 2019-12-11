@@ -1,4 +1,4 @@
-import React, { useRef, forwardRef } from 'react';
+import React, { useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
@@ -6,7 +6,6 @@ const FullScreenAppStyles = styled.div`
   position: absolute;
   height: var(--appHeight);
   width: var(--appWidth);
-  /* background-color: blue; */
   opacity: 0;
   visibility: hidden;
   transition: all 0.3s, opacity 0.3s, transform 0.3s;
@@ -15,12 +14,18 @@ const FullScreenAppStyles = styled.div`
     visibility: visible;
   }
 `;
-const FullScreenApp = React.forwardRef(({ app }, ref) => (
-  <FullScreenAppStyles ref={ref} app={app}>
-    {app.app}
-  </FullScreenAppStyles>
-));
+const FullScreenApp = ({ app, setApp }) => {
+  const ref = useRef();
+  useEffect(() => {
+    setApp(ref);
+    app.fullScreenRef = ref.current;
+  }, [app.fullScreenRef, setApp]);
+  return <FullScreenAppStyles ref={ref}>{app.app}</FullScreenAppStyles>;
+};
 
-// FullScreenApp.propTypes = {};
+FullScreenApp.propTypes = {
+  app: PropTypes.any,
+  setApp: PropTypes.any,
+};
 
 export default FullScreenApp;

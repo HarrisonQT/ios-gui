@@ -67,8 +67,7 @@ const AppGrid = ({
   orientation,
   homeApps,
   apps,
-  setCurrentFullScreenRef,
-  setCurrentAppRef,
+  setCurrentAppRefs,
 }) => (
   // const apps = [{ title: 'Gmail', icon: '' }];
   <DeviceHomeGridWrapper appGrid={device.appGrid} orientation={orientation}>
@@ -78,9 +77,8 @@ const AppGrid = ({
           <App
             key={index}
             app={app}
-            setCurrentFullScreenRef={setCurrentFullScreenRef}
-            setCurrentAppRef={setCurrentAppRef}
             deviceScreenRef={device.deviceScreenRef}
+            setCurrentAppRefs={setCurrentAppRefs}
           />
         ))}
       </DeviceAppGrid>
@@ -91,8 +89,7 @@ const AppGrid = ({
           <App
             key={index}
             app={app}
-            setCurrentFullScreenRef={setCurrentFullScreenRef}
-            setCurrentAppRef={setCurrentAppRef}
+            setCurrentAppRefs={setCurrentAppRefs}
             deviceScreenRef={device.deviceScreenRef}
           />
         ))}
@@ -105,8 +102,7 @@ AppGrid.propTypes = {
   device: PropTypes.any,
   apps: PropTypes.any,
   homeApps: PropTypes.any,
-  setCurrentFullScreenRef: PropTypes.any,
-  setCurrentAppRef: PropTypes.any,
+  setCurrentAppRefs: PropTypes.any,
 };
 
 export default AppGrid;

@@ -1,19 +1,16 @@
 import React, { useRef, useLayoutEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import BatterySVG from './BatterySVG';
-import WifiSVG from './WifiSVG';
 import {
   calculateByDiagonal,
   calculateDiagonal,
 } from '../lib/calculateDimensions';
-import { SCREEN_WIDTHS, DEVICES, COLORS } from '../lib/constants';
-import AppGrid from './AppGrid';
-import FullScreenApp from './FullScreenApp';
+import { SCREEN_WIDTHS, DEVICES, COLORS, DEV_MODE } from '../lib/constants';
+import Screen from './Screen';
+import Hardware from './Hardware';
 
 const LEFT_RIGHT = '45px';
 const TOP_DOWN = '12px';
-const HOME_BUTTON_ACTIVE = 'homeButtonActive';
 
 const IOSGuiAppStyles = styled.div`
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
@@ -161,180 +158,6 @@ const Device = styled.div`
   width: 100%;
 `;
 
-const DeviceHardware = styled.div`
-  position: absolute;
-  .deviceInterface {
-    position: absolute;
-    display: block;
-  }
-  .topHardware {
-    top: var(--topHardwareTop);
-    left: var(--topHardwareLeft);
-    height: var(--topHardwareHeight);
-    width: var(--topHardwareWidth);
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    transform: rotate(
-      ${props => (props.orientation === 'landscape' ? '-90deg' : '0deg')}
-    );
-  }
-  .webcam {
-    left: calc((var(--topHardwareWidth) - var(--receiverWidth)) / 2 * -1);
-    position: absolute;
-    border: 1.2px solid black;
-    background-color: #666;
-    height: var(--webcamDiameter);
-    width: var(--webcamDiameter);
-    border-radius: 50%;
-    box-shadow: inset 0 3px 3px 0 rgba(0, 0, 0, 0.4);
-  }
-  .receiver {
-    border: 1.2px solid black;
-    background-color: #666;
-    height: var(--receiverHeight);
-    width: var(--receiverWidth);
-    box-shadow: inset 0 3px 3px 0 rgba(0, 0, 0, 0.4);
-  }
-  .homeButton {
-    top: var(--homeButtonTop);
-    left: var(--homeButtonLeft);
-    border: 1.2px solid #202020;
-    height: var(--homeButtonDiameter);
-    width: var(--homeButtonDiameter);
-    border-radius: 50%;
-    box-shadow: inset 0 0 3px 3px rgba(0, 0, 0, 0.4);
-    justify-content: space-around;
-    align-items: center;
-    position: relative;
-    overflow: hidden;
-
-    &.homeButtonActive {
-      .homeButtonInner {
-        box-shadow: 0 0 5px 2px #666;
-        transform: scale(0.9);
-        transition: transform 0.2s;
-        transition-timing-function: cubic-bezier(1, -0.65, 0, 2.31);
-      }
-    }
-    .homeButtonInner {
-      --offset: 12%;
-      left: calc(0% + var(--offset) / 2);
-      top: calc(0% + var(--offset) / 2);
-      position: absolute;
-      width: calc(100% - var(--offset));
-      height: calc(100% - var(--offset));
-      background-color: #eee;
-      border-radius: 50%;
-      z-index: 1;
-    }
-    .homeButtonBackground {
-      --overflow: 50%;
-      left: calc(0% - var(--overflow) / 2);
-      top: calc(0% - var(--overflow) / 2);
-      position: absolute;
-      width: calc(100% + var(--overflow));
-      height: calc(100% + var(--overflow));
-      background: radial-gradient(#eaeaea, #262626);
-      border-radius: 50%;
-      z-index: 0;
-    }
-  }
-`;
-const DeviceScreenWrapper = styled.div`
-  position: relative;
-  left: var(--sideBezel);
-  right: var(--sideBezel);
-  top: ${props =>
-    props.orientation === 'landscape' && !props.appGrid.rotatable
-      ? 'calc(100% - var(--topDownBezel))'
-      : 'var(--topDownBezel)'};
-  bottom: var(--topDownBezel);
-  height: ${props =>
-    props.orientation === 'landscape' && !props.appGrid.rotatable
-      ? 'var(--displayWidth)'
-      : 'calc(100% - var(--topDownBezel) * 2)'};
-  width: ${props =>
-    props.orientation === 'landscape' && !props.appGrid.rotatable
-      ? 'var(--displayHeight)'
-      : 'calc(100% - var(--sideBezel) * 2)'};
-  transform-origin: left top;
-  transform: rotate(
-    ${props =>
-      props.orientation === 'landscape' && !props.appGrid.rotatable
-        ? '-90deg'
-        : '0deg'}
-  );
-  overflow: hidden;
-  border-radius: 5px 5px;
-  box-shadow: inset 0px 0px 2px 2px rgba(0, 0, 0, 0.3);
-  pointer-events: none;
-  padding: 1px;
-  background-color: white;
-`;
-
-const DeviceScreen = styled.div`
-  height: 100%;
-  width: 100%;
-  display: grid;
-  grid-template-columns: 1fr;
-  grid-template-rows: minmax(var(--statusBarHeight), 20px) 0px 1fr;
-  background-image: url('/wallpaper.png');
-  background-position: center;
-  background-size: cover;
-  border-radius: 5px;
-`;
-const DeviceScreenStatusBar = styled.div`
-  top: 0;
-  left: 0;
-  width: 100%;
-  background-color: transparent;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1px 5px;
-  border-radius: 5px 5px 0 0;
-  height: var(--statusBarHeight);
-  min-height: 20px;
-  & > * {
-    height: 100%;
-  }
-  .ipad {
-    svg {
-      height: var(--statusBarHeight);
-      min-height: 20px;
-      width: 15px;
-      margin: 0 0 0 1px;
-    }
-  }
-  .time,
-  .ipad,
-  .battery {
-    display: flex;
-    align-items: center;
-  }
-  .text {
-    white-space: nowrap;
-  }
-  .battery {
-    svg {
-      height: var(--statusBarHeight);
-      min-height: 20px;
-      width: 15px;
-      margin: 2px 0 0 2px;
-    }
-  }
-`;
-
-const DeviceScreenNavigationBar = styled.div``;
-
-const DeviceScreenInner = styled.div`
-  position: relative;
-  overflow: hidden;
-  border-radius: 0 0 5px 5px;
-  pointer-events: all;
-`;
-
 function calculateDeviceDimensions(device, orientation) {
   const { height: displayHeight, width: displayWidth } = calculateByDiagonal(
     device.display.inches.aspectRatioHeight,
@@ -455,63 +278,23 @@ const IOSGuiApp = ({
   homeApps = Array.from({ length: 4 }),
 }) => {
   const deviceRef = useRef();
-  const homeButtonRef = useRef();
-  let currentFullscreenRef = useRef(null);
-  let currentAppRef = null;
-
+  const [refs, setRefs] = useState({
+    currentFullscreenRef: null,
+    currentAppRef: null,
+  });
+  const setCurrentAppRefs = (currentFullscreenRef, currentAppRef) => {
+    setRefs({
+      currentFullscreenRef,
+      currentAppRef,
+    });
+    console.log(refs);
+  };
   const d = { ...deviceType };
   const device = calculateDeviceDimensions(d, orientation);
 
   device.deviceScreenRef = useRef(null);
   const [dimensions, setDimensions] = useState({ width, height });
-  const date = new Date();
-  // console.table(apps);
-  const setRef = (app, ref) => {
-    app.fullScreenRef = ref;
-  };
-  const setCurrentFullScreenRef = ref => {
-    currentFullscreenRef = ref;
-  };
-  const setCurrentAppRef = ref => {
-    currentAppRef = ref;
-  };
-  function triggerHomeButton(ref) {
-    ref.current.classList.add(HOME_BUTTON_ACTIVE);
-    console.log(currentFullscreenRef.current);
-    if (
-      currentFullscreenRef.current !== null &&
-      currentFullscreenRef.classList.contains('fullScreenAppActive')
-    ) {
-      const refCoords = currentAppRef.current.getBoundingClientRect();
-      console.log(currentFullscreenRef, currentAppRef.current);
-      const deviceScreenRefCoords = device.deviceScreenRef.current.getBoundingClientRect();
-      console.log(
-        refCoords,
-        deviceScreenRefCoords,
-        device.deviceScreenRef.current,
-        currentAppRef.current
-      );
-      const coords = {
-        top: refCoords.top - deviceScreenRefCoords.top,
-        left: refCoords.left - deviceScreenRefCoords.left,
-        bottom: refCoords.bottom - deviceScreenRefCoords.bottom,
-        right: refCoords.right - deviceScreenRefCoords.right,
-      };
-      currentFullscreenRef.classList.remove('fullScreenAppActive');
-      currentFullscreenRef.style.setProperty('width', `var(--appWidth)`);
-      currentFullscreenRef.style.setProperty('height', `var(--appHeight)`);
-      currentFullscreenRef.style.left = `${coords.left}px`;
-      currentFullscreenRef.style.top = `${coords.top}px`;
-      currentFullscreenRef.style.right = `${coords.right}px`;
-      currentFullscreenRef.style.bottom = `${coords.bottom}px`;
-      currentFullscreenRef.style.transform = ``;
-    }
-    setTimeout(() => {
-      if (ref.current.classList.contains(HOME_BUTTON_ACTIVE)) {
-        ref.current.classList.remove(HOME_BUTTON_ACTIVE);
-      }
-    }, 200);
-  }
+
   useLayoutEffect(() => {
     if (deviceRef.current) {
       let w;
@@ -563,81 +346,25 @@ const IOSGuiApp = ({
         orientation={orientation}
         color={color}
       >
-        <span className="deviceInterface horz"></span>
-        <span className="deviceInterface vert"></span>
+        {DEV_MODE && (
+          <>
+            <span className="deviceInterface horz"></span>
+            <span className="deviceInterface vert"></span>
+          </>
+        )}
+        <Hardware
+          device={device}
+          orientation={orientation}
+          currentAppRefs={refs}
+        />
         <Device className="Device">
-          <DeviceHardware className="DeviceHardware" orientation={orientation}>
-            <div className="deviceInterface topHardware">
-              <span className="webcam"></span>
-              {device.size.inches.receiver && (
-                <span className="receiver"></span>
-              )}
-            </div>
-            <button
-              className="deviceInterface homeButton"
-              ref={homeButtonRef}
-              onClick={() => triggerHomeButton(homeButtonRef)}
-              type="button"
-            >
-              <div className="homeButtonInner"></div>
-              <div className="homeButtonBackground"></div>
-            </button>
-          </DeviceHardware>
-          <DeviceScreenWrapper
-            className="DeviceScreenWrapper"
+          <Screen
+            device={device}
             orientation={orientation}
-            appGrid={device.appGrid}
-            ref={device.deviceScreenRef}
-          >
-            <DeviceScreen className="DeviceScreen">
-              <DeviceScreenStatusBar className="DeviceScreenStatusBar">
-                <div className="ipad">
-                  <span className="text">{device.name}</span>
-                  <WifiSVG className="wifi" />
-                </div>
-
-                <div className="time">
-                  <span className="text">
-                    {date.toLocaleString('en-US', {
-                      hour: 'numeric',
-                      minute: 'numeric',
-                      hour12: true,
-                    })}
-                  </span>
-                </div>
-                <div className="battery">
-                  <span className="text">100%</span>
-
-                  <BatterySVG className="wifi" />
-                </div>
-              </DeviceScreenStatusBar>
-              <DeviceScreenNavigationBar className="DeviceScreenNavigationBar"></DeviceScreenNavigationBar>
-              <DeviceScreenInner className="DeviceScreenInner">
-                {apps.map((app, index) => (
-                  <FullScreenApp
-                    app={app}
-                    ref={ref => setRef(app, ref)}
-                    key={index}
-                  />
-                ))}
-                {homeApps.map((app, index) => (
-                  <FullScreenApp
-                    app={app}
-                    ref={ref => setRef(app, ref)}
-                    key={index}
-                  />
-                ))}
-                <AppGrid
-                  device={device}
-                  orientation={orientation}
-                  homeApps={homeApps}
-                  apps={apps}
-                  setCurrentFullScreenRef={setCurrentFullScreenRef}
-                  setCurrentAppRef={setCurrentAppRef}
-                />
-              </DeviceScreenInner>
-            </DeviceScreen>
-          </DeviceScreenWrapper>
+            apps={apps}
+            homeApps={homeApps}
+            setCurrentAppRefs={setCurrentAppRefs}
+          />
         </Device>
       </DeviceWrapper>
     </IOSGuiAppStyles>

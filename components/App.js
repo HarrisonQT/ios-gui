@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheckSquare, faPhoneAlt } from '@fortawesome/free-solid-svg-icons';
+import { faPhoneAlt } from '@fortawesome/free-solid-svg-icons';
 
 const DeviceAppWrapper = styled.button`
   display: flex;
@@ -32,20 +32,15 @@ const DeviceAppTitle = styled.div`
   text-align: center;
 `;
 const DeviceApp = styled.div``;
-const App = ({
-  app,
-  setCurrentFullScreenRef,
-  deviceScreenRef,
-  setCurrentAppRef,
-}) => {
+const App = ({ app, deviceScreenRef, setCurrentAppRefs }) => {
   const iconRef = useRef();
   const appRef = useRef();
   app.ref = appRef;
-  function handleAppClick() {
-    // console.log(app.fullScreenRef);
+  async function handleAppClick() {
     app.fullScreenRef.classList.add('fullScreenAppActive');
-    setCurrentFullScreenRef(app.fullScreenRef);
-    setCurrentAppRef(app.ref);
+
+    setCurrentAppRefs(app.fullScreenRef, appRef.current);
+    console.log(app.fullScreenRef, appRef.current);
     if (!iconRef.current) return;
     const refCoords = iconRef.current.getBoundingClientRect();
     const deviceScreenRefCoords = deviceScreenRef.current.getBoundingClientRect();
@@ -86,8 +81,7 @@ const App = ({
 
 App.propTypes = {
   app: PropTypes.any,
-  setCurrentFullScreenRef: PropTypes.any,
-  setCurrentAppRef: PropTypes.any,
+  setCurrentAppRefs: PropTypes.any,
   deviceScreenRef: PropTypes.any,
 };
 
