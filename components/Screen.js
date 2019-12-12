@@ -59,9 +59,7 @@ const DeviceScreenInner = styled.div`
 `;
 const Screen = ({ device, orientation, apps, homeApps, setCurrentAppRefs }) => {
   async function setApp(app, ref) {
-    // debugger;
     app.fullScreenRef = ref.current;
-    // console.log(app, app.fullScreenRef, ref);
   }
   return (
     <DeviceScreenWrapper

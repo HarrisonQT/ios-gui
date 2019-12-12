@@ -5,12 +5,9 @@ import {
   calculateByDiagonal,
   calculateDiagonal,
 } from '../lib/calculateDimensions';
-import { SCREEN_WIDTHS, DEVICES, COLORS, DEV_MODE } from '../lib/constants';
+import { DEVICES, COLORS, DEV_MODE } from '../lib/constants';
 import Screen from './Screen';
 import Hardware from './Hardware';
-
-const LEFT_RIGHT = '45px';
-const TOP_DOWN = '12px';
 
 const IOSGuiAppStyles = styled.div`
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
@@ -19,37 +16,6 @@ const IOSGuiAppStyles = styled.div`
   height: 100%;
   width: 100%;
   position: relative;
-  /* @media (max-width: ${SCREEN_WIDTHS.small}) {
-    --leftRight: ${TOP_DOWN};
-    --topDown: ${LEFT_RIGHT};
-    .tabletDesign {
-      &.webcam {
-        top: calc(var(--topDown) / 2 - 5px);
-        left: 50%;
-        height: 10px;
-        width: 10px;
-      }
-      &.homeButton {
-        top: calc(100% - var(--topDown) / 2 - 15px);
-        left: 48%;
-        height: 30px;
-        width: 30px;
-      }
-      &.statusBar {
-        top: var(--wrapperInset);
-        left: var(--wrapperInset);
-        right: var(--wrapperInset);
-        height: var(--statusBarHeight);
-        width: calc(100% - var(--wrapperInset) * 2);
-        .ipad {
-          svg {
-          }
-        }
-        .battery {
-        }
-      }
-    }
-  } */
 `;
 
 const DeviceWrapper = styled.div`
@@ -251,8 +217,6 @@ function calculateDeviceDimensions(device, orientation) {
     device.display.pixels.navigationBar / device.display.pixels.height;
   device.ratios.appSize =
     device.display.pixels.appSize / device.display.pixels.height;
-  // device.ratios.appSize =
-  //     device.display.pixels.appSize / device.display.pixels.height;
   device.ratios.bezel = {};
   const s =
     (device.size.pixels.width - device.display.pixels.width) /
@@ -283,13 +247,10 @@ const IOSGuiApp = ({
     currentAppRef: null,
   });
   const setCurrentAppRefs = async (currentFullscreenRef, currentAppRef) => {
-    console.log(refs, currentAppRef, currentFullscreenRef);
-    // debugger;
     setRefs({
       currentFullscreenRef,
       currentAppRef,
     });
-    console.log(refs, currentAppRef, currentFullscreenRef);
   };
   const d = { ...deviceType };
   const device = calculateDeviceDimensions(d, orientation);

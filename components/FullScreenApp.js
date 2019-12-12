@@ -19,7 +19,6 @@ const FullScreenAppStyles = styled.div`
 const FullScreenApp = ({ app, setApp }) => {
   const ref = useRef(null);
   useEffect(() => {
-    // setApp(app, ref);
     app.fullScreenRef = ref.current;
   }, [app, setApp]);
   return <FullScreenAppStyles ref={ref}>{app.content}</FullScreenAppStyles>;

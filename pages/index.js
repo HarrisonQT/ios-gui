@@ -16,7 +16,6 @@ import AppIcon from '../components/AppIcon';
 const HomeStyles = styled.div`
   height: 100%;
   width: 100%;
-  /* padding: 20px; */
   .row {
     height: 100%;
     width: 100%;
@@ -170,13 +169,18 @@ const Home = () => {
     const randomColor1 = Math.floor(Math.random() * 16777215).toString(16);
     const randomColor2 = Math.floor(Math.random() * 16777215).toString(16);
     const angle = Math.floor(Math.random() * 360).toString();
-    const gradient = `linear-gradient(${angle}deg, ${randomColor1}, ${randomColor2})`;
+    const gradient = `linear-gradient(${angle}deg, #${randomColor1} 0%, #${randomColor2} 100%)`;
     return gradient;
   }
   function generateRandomApp() {
     const gradient = generateRandomGradient();
+    return (
+      <div
+        style={{ background: gradient, height: '100%', width: '100%' }}
+      ></div>
+    );
   }
-
+  IOS_APPS.map(app => (app.content = generateRandomApp()));
   const FA_ICONS = {
     phone: (
       <FontAwesomeIcon
@@ -276,6 +280,7 @@ const Home = () => {
   const homeRowApps3 = [...IOS_APPS.slice(13, 17)];
   const apps4 = [...IOS_APPS.slice(17, 21)];
   const homeRowApps4 = [...IOS_APPS.slice(21, 25)];
+
   return (
     <HomeStyles>
       <div className="row">

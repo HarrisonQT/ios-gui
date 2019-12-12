@@ -68,38 +68,35 @@ const AppGrid = ({
   homeApps,
   apps,
   setCurrentAppRefs,
-}) => {
-  console.log(apps);
-  return (
-    <DeviceHomeGridWrapper appGrid={device.appGrid} orientation={orientation}>
-      <DeviceAppGridWrapper className="appGridWrapper">
-        <DeviceAppGrid className="appGrid" orientation={orientation}>
-          {apps.map((app, index) => (
-            <App
-              key={`${index}${app.title}${device.name}apps`}
-              app={app}
-              deviceScreenRef={device.deviceScreenRef}
-              setCurrentAppRefs={setCurrentAppRefs}
-            />
-          ))}
-        </DeviceAppGrid>
-      </DeviceAppGridWrapper>
-      <DeviceAppGridHomeRowWrapper className="appGridWrapper">
-        <DeviceAppGridHomeRow className="appGrid">
-          {homeApps.map((app, index) => (
-            <App
-              homeRow
-              app={app}
-              key={`${index}${app.title}${device.name}apps`}
-              setCurrentAppRefs={setCurrentAppRefs}
-              deviceScreenRef={device.deviceScreenRef}
-            />
-          ))}
-        </DeviceAppGridHomeRow>
-      </DeviceAppGridHomeRowWrapper>
-    </DeviceHomeGridWrapper>
-  );
-};
+}) => (
+  <DeviceHomeGridWrapper appGrid={device.appGrid} orientation={orientation}>
+    <DeviceAppGridWrapper className="appGridWrapper">
+      <DeviceAppGrid className="appGrid" orientation={orientation}>
+        {apps.map((app, index) => (
+          <App
+            key={`${index}${app.title}${device.name}apps`}
+            app={app}
+            deviceScreenRef={device.deviceScreenRef}
+            setCurrentAppRefs={setCurrentAppRefs}
+          />
+        ))}
+      </DeviceAppGrid>
+    </DeviceAppGridWrapper>
+    <DeviceAppGridHomeRowWrapper className="appGridWrapper">
+      <DeviceAppGridHomeRow className="appGrid">
+        {homeApps.map((app, index) => (
+          <App
+            homeRow
+            app={app}
+            key={`${index}${app.title}${device.name}apps`}
+            setCurrentAppRefs={setCurrentAppRefs}
+            deviceScreenRef={device.deviceScreenRef}
+          />
+        ))}
+      </DeviceAppGridHomeRow>
+    </DeviceAppGridHomeRowWrapper>
+  </DeviceHomeGridWrapper>
+);
 AppGrid.propTypes = {
   orientation: PropTypes.any,
   device: PropTypes.any,

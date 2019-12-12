@@ -43,15 +43,10 @@ const DeviceApp = styled.div`
 const App = ({ app, deviceScreenRef, setCurrentAppRefs, homeRow }) => {
   const iconRefWrapper = useRef(null);
   const appRef = useRef(null);
-  console.log(app);
   async function handleAppClick() {
-    console.log(app.fullScreenRef);
-    // debugger;
     app.ref = appRef;
     await setCurrentAppRefs(app.fullScreenRef, app.ref.current);
-    // debugger;
     app.fullScreenRef.classList.add('fullScreenAppActive');
-    console.log(app.fullScreenRef);
     if (!iconRefWrapper.current) return;
     const refCoords = iconRefWrapper.current.getBoundingClientRect();
     const deviceScreenRefCoords = deviceScreenRef.current.getBoundingClientRect();
