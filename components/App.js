@@ -1,10 +1,10 @@
 import React, { useRef } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPhoneAlt } from '@fortawesome/free-solid-svg-icons';
 
 const DeviceAppWrapper = styled.button`
+  height: 100%;
+  width: 100%;
   display: flex;
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
   font-size: 1rem;
@@ -14,37 +14,47 @@ const DeviceAppWrapper = styled.button`
   background: none;
   border: none;
 `;
-const DeviceAppIcon = styled.div`
+const DeviceAppIconWrapper = styled.div`
   height: var(--appIconSize);
   width: var(--appIconSize);
-  background: linear-gradient(#86fe65 0%, #06d315 100%);
   border-radius: 20%;
   display: flex;
   justify-content: center;
   align-items: center;
-  svg {
-    height: 50%;
-    width: 50%;
+  overflow: hidden;
+  position: relative;
+  & > * {
+    height: 100%;
+    width: 100%;
   }
 `;
 const DeviceAppTitle = styled.div`
-  margin-top: 1px;
   text-align: center;
+  white-space: nowrap;
 `;
-const DeviceApp = styled.div``;
-const App = ({ app, deviceScreenRef, setCurrentAppRefs }) => {
-  const iconRef = useRef();
-  const appRef = useRef();
-  app.ref = appRef;
+const DeviceApp = styled.div`
+  height: auto;
+  width: auto;
+  display: flex;
+  justify-content: center;
+  align-content: space-between;
+  flex-wrap: wrap;
+`;
+const App = ({ app, deviceScreenRef, setCurrentAppRefs, homeRow }) => {
+  const iconRefWrapper = useRef(null);
+  const appRef = useRef(null);
+  console.log(app);
   async function handleAppClick() {
+    console.log(app.fullScreenRef);
+    // debugger;
+    app.ref = appRef;
+    await setCurrentAppRefs(app.fullScreenRef, app.ref.current);
+    // debugger;
     app.fullScreenRef.classList.add('fullScreenAppActive');
-
-    setCurrentAppRefs(app.fullScreenRef, appRef.current);
-    console.log(app.fullScreenRef, appRef.current);
-    if (!iconRef.current) return;
-    const refCoords = iconRef.current.getBoundingClientRect();
+    console.log(app.fullScreenRef);
+    if (!iconRefWrapper.current) return;
+    const refCoords = iconRefWrapper.current.getBoundingClientRect();
     const deviceScreenRefCoords = deviceScreenRef.current.getBoundingClientRect();
-    console.log(refCoords);
     const coords = {
       height: refCoords.height,
       width: refCoords.width,
@@ -63,19 +73,23 @@ const App = ({ app, deviceScreenRef, setCurrentAppRefs }) => {
     );
   }
   return (
-    <DeviceAppWrapper
-      className="deviceAppWrapper"
-      type="button"
-      onClick={handleAppClick}
-      ref={appRef}
-    >
-      <DeviceApp className="deviceApp">
-        <DeviceAppIcon ref={iconRef}>
-          <FontAwesomeIcon icon={faPhoneAlt} size="2x" />
-        </DeviceAppIcon>
-        {app.title && <DeviceAppTitle>{app.title}</DeviceAppTitle>}
-      </DeviceApp>
-    </DeviceAppWrapper>
+    <>
+      {app && (
+        <DeviceAppWrapper
+          className="deviceAppWrapper"
+          type="button"
+          onClick={handleAppClick}
+          ref={appRef}
+        >
+          <DeviceApp className="deviceApp">
+            <DeviceAppIconWrapper ref={iconRefWrapper}>
+              {app.icon}
+            </DeviceAppIconWrapper>
+            {!homeRow && <DeviceAppTitle>{app.title}</DeviceAppTitle>}
+          </DeviceApp>
+        </DeviceAppWrapper>
+      )}
+    </>
   );
 };
 
@@ -83,6 +97,7 @@ App.propTypes = {
   app: PropTypes.any,
   setCurrentAppRefs: PropTypes.any,
   deviceScreenRef: PropTypes.any,
+  homeRow: PropTypes.any,
 };
 
 export default App;

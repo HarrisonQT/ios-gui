@@ -12,15 +12,17 @@ const FullScreenAppStyles = styled.div`
   &.fullScreenAppActive {
     opacity: 1;
     visibility: visible;
+    z-index: 1;
+    background-color: white;
   }
 `;
 const FullScreenApp = ({ app, setApp }) => {
-  const ref = useRef();
+  const ref = useRef(null);
   useEffect(() => {
-    setApp(ref);
+    // setApp(app, ref);
     app.fullScreenRef = ref.current;
-  }, [app.fullScreenRef, setApp]);
-  return <FullScreenAppStyles ref={ref}>{app.app}</FullScreenAppStyles>;
+  }, [app, setApp]);
+  return <FullScreenAppStyles ref={ref}>{app.content}</FullScreenAppStyles>;
 };
 
 FullScreenApp.propTypes = {

@@ -277,24 +277,25 @@ const IOSGuiApp = ({
   apps = Array.from({ length: 24 }),
   homeApps = Array.from({ length: 4 }),
 }) => {
-  const deviceRef = useRef();
+  const deviceRef = useRef(null);
   const [refs, setRefs] = useState({
     currentFullscreenRef: null,
     currentAppRef: null,
   });
-  const setCurrentAppRefs = (currentFullscreenRef, currentAppRef) => {
+  const setCurrentAppRefs = async (currentFullscreenRef, currentAppRef) => {
+    console.log(refs, currentAppRef, currentFullscreenRef);
+    // debugger;
     setRefs({
       currentFullscreenRef,
       currentAppRef,
     });
-    console.log(refs);
+    console.log(refs, currentAppRef, currentFullscreenRef);
   };
   const d = { ...deviceType };
   const device = calculateDeviceDimensions(d, orientation);
 
   device.deviceScreenRef = useRef(null);
   const [dimensions, setDimensions] = useState({ width, height });
-
   useLayoutEffect(() => {
     if (deviceRef.current) {
       let w;
@@ -331,8 +332,6 @@ const IOSGuiApp = ({
       });
     }
   }, [device.ratios.size, orientation]);
-
-  // console.table(device);
   return (
     <IOSGuiAppStyles
       ref={deviceRef}
@@ -361,8 +360,12 @@ const IOSGuiApp = ({
           <Screen
             device={device}
             orientation={orientation}
-            apps={apps}
-            homeApps={homeApps}
+            apps={apps.slice(0, 24).filter(function(element) {
+              return element !== undefined;
+            })}
+            homeApps={homeApps.slice(0, 4).filter(function(element) {
+              return element !== undefined;
+            })}
             setCurrentAppRefs={setCurrentAppRefs}
           />
         </Device>

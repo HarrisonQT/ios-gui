@@ -1,7 +1,17 @@
 import React from 'react';
 import styled from 'styled-components';
+import Iframe from 'react-iframe';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faPhoneAlt,
+  faComment,
+  faVideo,
+  faCamera,
+} from '@fortawesome/free-solid-svg-icons';
 import IOSGui from '../components/IOSGui';
 import { COLORS, DEVICES } from '../lib/constants';
+import { IOS_APPS } from '../lib/iosApps.js';
+import AppIcon from '../components/AppIcon';
 
 const HomeStyles = styled.div`
   height: 100%;
@@ -150,57 +160,122 @@ const TestApp = styled.div`
       rgb(223, 183, 125) 206px
     );
   }
+  &.test {
+    background-color: white;
+  }
 `;
 
 const Home = () => {
+  function generateRandomGradient() {
+    const randomColor1 = Math.floor(Math.random() * 16777215).toString(16);
+    const randomColor2 = Math.floor(Math.random() * 16777215).toString(16);
+    const angle = Math.floor(Math.random() * 360).toString();
+    const gradient = `linear-gradient(${angle}deg, ${randomColor1}, ${randomColor2})`;
+    return gradient;
+  }
+  function generateRandomApp() {
+    const gradient = generateRandomGradient();
+  }
+
+  const FA_ICONS = {
+    phone: (
+      <FontAwesomeIcon
+        icon={faPhoneAlt}
+        style={{ height: '60%', width: '60%' }}
+      />
+    ),
+    comment: (
+      <FontAwesomeIcon
+        icon={faComment}
+        style={{ height: '60%', width: '70%' }}
+      />
+    ),
+    video: (
+      <FontAwesomeIcon icon={faVideo} style={{ height: '60%', width: '67%' }} />
+    ),
+    camera: (
+      <FontAwesomeIcon
+        icon={faCamera}
+        style={{ height: '60%', width: '60%' }}
+      />
+    ),
+  };
+  const GRADIENTS = {
+    green: 'linear-gradient(#86fe65 0%, #06d315 100%)',
+    gray:
+      'linear-gradient(-180deg, rgba(255, 255, 255, 0.5) 0%, rgba(0, 0, 0, 0.4) 40%) rgb(201, 204, 211)',
+  };
+  const ICONS = {
+    phone: <AppIcon svg={FA_ICONS.phone} background={GRADIENTS.green} />,
+    message: <AppIcon svg={FA_ICONS.comment} background={GRADIENTS.green} />,
+    facetime: <AppIcon svg={FA_ICONS.video} background={GRADIENTS.green} />,
+    camera: <AppIcon svg={FA_ICONS.camera} background={GRADIENTS.gray} />,
+    angryramen: (
+      <AppIcon
+        svg={
+          <img
+            src="http://www.angryramen.com/static/angry-ramen-logo-only-bowl.svg"
+            alt="Angry Ramen"
+            style={{ height: '80%', width: '80%' }}
+          />
+        }
+        background="white"
+      />
+    ),
+  };
+  const APPS = {
+    phone: {
+      title: 'Phone',
+      icon: ICONS.phone,
+      content: '',
+    },
+    message: {
+      title: 'iMessage',
+      icon: ICONS.message,
+      content: '',
+    },
+    facetime: {
+      title: 'FaceTime',
+      icon: ICONS.facetime,
+      content: '',
+    },
+    camera: {
+      title: 'FaceTime',
+      icon: ICONS.camera,
+      content: '',
+    },
+  };
+
   const apps1 = [
-    { title: 'title', icon: '', app: <TestApp className="test1"></TestApp> },
-    { title: 'title', icon: '', app: <TestApp className="test2"></TestApp> },
-    { title: 'title', icon: '', app: <TestApp className="test3"></TestApp> },
-    { title: 'title', icon: '', app: <TestApp className="test4"></TestApp> },
+    {
+      title: 'Angry Ramen',
+      icon: ICONS.angryramen,
+      content: (
+        <TestApp className="test">
+          <Iframe
+            url="http://www.angryramen.com/"
+            width="100%"
+            height="100%"
+            id="myId"
+            display="initial"
+            position="relative"
+          />
+        </TestApp>
+      ),
+    },
+    APPS.message,
+    APPS.facetime,
+    APPS.camera,
   ];
   const homeApps1 = [
-    { icon: '', app: <TestApp className="test1"></TestApp> },
-    { icon: '', app: <TestApp className="test2"></TestApp> },
-    { icon: '', app: <TestApp className="test3"></TestApp> },
-    { icon: '', app: <TestApp className="test4"></TestApp> },
+    { icon: ICONS.phone, content: <TestApp className="test1"></TestApp> },
   ];
-  const apps2 = [
-    { title: 'title', icon: '', app: <TestApp className="test1"></TestApp> },
-    { title: 'title', icon: '', app: <TestApp className="test2"></TestApp> },
-    { title: 'title', icon: '', app: <TestApp className="test3"></TestApp> },
-    { title: 'title', icon: '', app: <TestApp className="test4"></TestApp> },
-  ];
-  const homeApps2 = [
-    { icon: '', app: <TestApp className="test1"></TestApp> },
-    { icon: '', app: <TestApp className="test2"></TestApp> },
-    { icon: '', app: <TestApp className="test3"></TestApp> },
-    { icon: '', app: <TestApp className="test4"></TestApp> },
-  ];
-  const apps3 = [
-    { title: 'title', icon: '', app: <TestApp className="test1"></TestApp> },
-    { title: 'title', icon: '', app: <TestApp className="test2"></TestApp> },
-    { title: 'title', icon: '', app: <TestApp className="test3"></TestApp> },
-    { title: 'title', icon: '', app: <TestApp className="test4"></TestApp> },
-  ];
-  const homeApps3 = [
-    { icon: '', app: <TestApp className="test1"></TestApp> },
-    { icon: '', app: <TestApp className="test2"></TestApp> },
-    { icon: '', app: <TestApp className="test3"></TestApp> },
-    { icon: '', app: <TestApp className="test4"></TestApp> },
-  ];
-  const apps4 = [
-    { title: 'title', icon: '', app: <TestApp className="test1"></TestApp> },
-    { title: 'title', icon: '', app: <TestApp className="test2"></TestApp> },
-    { title: 'title', icon: '', app: <TestApp className="test3"></TestApp> },
-    { title: 'title', icon: '', app: <TestApp className="test4"></TestApp> },
-  ];
-  const homeApps4 = [
-    { icon: '', app: <TestApp className="test1"></TestApp> },
-    { icon: '', app: <TestApp className="test2"></TestApp> },
-    { icon: '', app: <TestApp className="test3"></TestApp> },
-    { icon: '', app: <TestApp className="test4"></TestApp> },
-  ];
+  const apps2 = [...IOS_APPS.slice(0, 5)];
+  const homeRowApps2 = [...IOS_APPS.slice(5, 9)];
+  const apps3 = [...IOS_APPS.slice(9, 13)];
+  const homeRowApps3 = [...IOS_APPS.slice(13, 17)];
+  const apps4 = [...IOS_APPS.slice(17, 21)];
+  const homeRowApps4 = [...IOS_APPS.slice(21, 25)];
   return (
     <HomeStyles>
       <div className="row">
@@ -218,7 +293,7 @@ const Home = () => {
             orientation="landscape"
             deviceType={DEVICES.ipad['2017']}
             apps={apps2}
-            homeApps={homeApps2}
+            homeApps={homeRowApps2}
           />
         </div>
       </div>
@@ -229,7 +304,7 @@ const Home = () => {
             color={COLORS.black}
             deviceType={DEVICES.iphone['8plus']}
             apps={apps3}
-            homeApps={homeApps3}
+            homeApps={homeRowApps3}
           />
         </div>
         <div className="right">
@@ -237,7 +312,7 @@ const Home = () => {
             orientation="landscape"
             deviceType={DEVICES.iphone['8plus']}
             apps={apps4}
-            homeApps={homeApps4}
+            homeApps={homeRowApps4}
           />
         </div>
       </div>

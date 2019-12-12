@@ -58,9 +58,11 @@ const DeviceScreenInner = styled.div`
   pointer-events: all;
 `;
 const Screen = ({ device, orientation, apps, homeApps, setCurrentAppRefs }) => {
-  const setApp = (app, ref) => {
-    app.fullScreenRef = ref;
-  };
+  async function setApp(app, ref) {
+    // debugger;
+    app.fullScreenRef = ref.current;
+    // console.log(app, app.fullScreenRef, ref);
+  }
   return (
     <DeviceScreenWrapper
       className="DeviceScreenWrapper"
@@ -75,15 +77,15 @@ const Screen = ({ device, orientation, apps, homeApps, setCurrentAppRefs }) => {
           {apps.map((app, index) => (
             <FullScreenApp
               app={app}
-              setApp={ref => setApp(app, ref)}
-              key={index}
+              setApp={setApp}
+              key={`${index}${device.name}apps`}
             />
           ))}
           {homeApps.map((app, index) => (
             <FullScreenApp
               app={app}
-              setApp={ref => setApp(app, ref)}
-              key={index}
+              setApp={setApp}
+              key={`${index}${device.name}homeRow`}
             />
           ))}
           <AppGrid

@@ -1,4 +1,4 @@
-import React, { useRef, forwardRef } from 'react';
+import React, { useRef } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
@@ -83,13 +83,10 @@ const DeviceHardware = styled.div`
     }
   }
 `;
-// const Hardware = forwardRef(({ app, orientation, device }, refs) => {
-const Hardware = ({ app, orientation, device, currentAppRefs }) => {
-  const homeButtonRef = useRef();
-  // const { currentFullscreenRef, currentAppRef } = refs;
+const Hardware = ({ orientation, device, currentAppRefs }) => {
+  const homeButtonRef = useRef(null);
   function triggerHomeButton(ref) {
     ref.current.classList.add(HOME_BUTTON_ACTIVE);
-    console.log(currentAppRefs);
     if (
       currentAppRefs.currentFullscreenRef !== null &&
       currentAppRefs.currentFullscreenRef.classList.contains(
@@ -97,17 +94,7 @@ const Hardware = ({ app, orientation, device, currentAppRefs }) => {
       )
     ) {
       const refCoords = currentAppRefs.currentAppRef.getBoundingClientRect();
-      console.log(
-        currentAppRefs.currentFullscreenRef,
-        currentAppRefs.currentAppRef.current
-      );
       const deviceScreenRefCoords = device.deviceScreenRef.current.getBoundingClientRect();
-      console.log(
-        refCoords,
-        deviceScreenRefCoords,
-        device.deviceScreenRef.current,
-        currentAppRefs.currentAppRef.current
-      );
       const coords = {
         top: refCoords.top - deviceScreenRefCoords.top,
         left: refCoords.left - deviceScreenRefCoords.left,
@@ -157,7 +144,6 @@ const Hardware = ({ app, orientation, device, currentAppRefs }) => {
 };
 
 Hardware.propTypes = {
-  app: PropTypes.any,
   orientation: PropTypes.any,
   device: PropTypes.any,
   currentFullscreenRef: PropTypes.any,
