@@ -1,17 +1,20 @@
-import React, { useRef, useLayoutEffect, useState } from 'react';
+/* eslint-disable no-param-reassign */
+import React, { Fragment, useRef, useLayoutEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import {
   calculateByDiagonal,
   calculateDiagonal,
-} from '../lib/calculateDimensions';
-import { DEVICES, COLORS, DEV_MODE } from '../lib/constants';
+} from './lib/calculateDimensions';
+import { DEVICES, COLORS, DEV_MODE } from './lib/constants';
 import Screen from './Screen';
 import Hardware from './Hardware';
+import { DeviceTypePropTypes, AppsPropTypes } from './lib/PropTypesValues';
 
 const IOSGuiAppStyles = styled.div`
+  box-sizing: border-box;
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  font-size: 1rem;
+  font-size: 10px;
   color: white;
   height: 100%;
   width: 100%;
@@ -19,6 +22,7 @@ const IOSGuiAppStyles = styled.div`
 `;
 
 const DeviceWrapper = styled.div`
+  box-sizing: border-box;
   --height: ${props => `${props.dimensions.height}px`};
   --width: ${props => `${props.dimensions.width}px`};
   --sideBezel: ${props =>
@@ -31,62 +35,62 @@ const DeviceWrapper = styled.div`
     var(--displayHeight) * ${props => props.device.ratios.statusBar}
   );
   --statusBarHeight: ${props =>
-    props.orientation === 'landscape'
+    (props.orientation === 'landscape'
       ? `calc(${props.device.ratios.statusBar} * var(--displayWidth))`
-      : `calc(${props.device.ratios.statusBar} * var(--displayHeight))`};
+      : `calc(${props.device.ratios.statusBar} * var(--displayHeight))`)};
   --homeButtonDiameter: ${props =>
-    props.orientation === 'landscape'
+    (props.orientation === 'landscape'
       ? `calc(${props.device.ratios.homeButtonDiameter} * var(--height))`
-      : `calc(${props.device.ratios.homeButtonDiameter} * var(--width))`};
+      : `calc(${props.device.ratios.homeButtonDiameter} * var(--width))`)};
   --homeButtonTop: ${props =>
-    props.orientation === 'landscape'
-      ? `calc(var(--height)/2 - var(--homeButtonDiameter)/2)`
-      : `calc(var(--height) - var(--topDownBezel)/2 - var(--homeButtonDiameter)/2)`};
+    (props.orientation === 'landscape'
+      ? 'calc(var(--height)/2 - var(--homeButtonDiameter)/2)'
+      : 'calc(var(--height) - var(--topDownBezel)/2 - var(--homeButtonDiameter)/2)')};
   --homeButtonLeft: ${props =>
-    props.orientation === 'landscape'
-      ? `calc(var(--width) - var(--sideBezel)/2 - var(--homeButtonDiameter)/2)`
-      : `calc(var(--width)/2 - var(--homeButtonDiameter)/2)`};
+    (props.orientation === 'landscape'
+      ? 'calc(var(--width) - var(--sideBezel)/2 - var(--homeButtonDiameter)/2)'
+      : 'calc(var(--width)/2 - var(--homeButtonDiameter)/2)')};
   --topHardwareReceiverHeight: ${props =>
-    props.orientation === 'landscape'
+    (props.orientation === 'landscape'
       ? `calc(${props.device.ratios.receiver.height} * var(--height))`
-      : `calc(${props.device.ratios.receiver.height} * var(--width))`};
+      : `calc(${props.device.ratios.receiver.height} * var(--width))`)};
   --topHardwareReceiverWidth: ${props =>
-    props.orientation === 'landscape'
+    (props.orientation === 'landscape'
       ? `calc(${props.device.ratios.receiver.width} * var(--height))`
-      : `calc(${props.device.ratios.receiver.width} * var(--width))`};
+      : `calc(${props.device.ratios.receiver.width} * var(--width))`)};
   --topHardwareHeight: ${props =>
-    props.orientation === 'landscape'
+    (props.orientation === 'landscape'
       ? `calc(${props.device.ratios.topHardware.height} * var(--height))`
-      : `calc(${props.device.ratios.topHardware.height} * var(--width))`};
+      : `calc(${props.device.ratios.topHardware.height} * var(--width))`)};
   --topHardwareWidth: ${props =>
-    props.orientation === 'landscape'
+    (props.orientation === 'landscape'
       ? `calc(${props.device.ratios.topHardware.width} * var(--height))`
-      : `calc(${props.device.ratios.topHardware.width} * var(--width))`};
+      : `calc(${props.device.ratios.topHardware.width} * var(--width))`)};
   --topHardwareTop: ${props =>
-    props.orientation === 'landscape'
-      ? `calc(var(--height)/2 - var(--webcamDiameter)/2)`
-      : `calc(var(--topDownBezel)/2 - var(--webcamDiameter)/2)`};
+    (props.orientation === 'landscape'
+      ? 'calc(var(--height)/2 - var(--webcamDiameter)/2)'
+      : 'calc(var(--topDownBezel)/2 - var(--webcamDiameter)/2)')};
   --topHardwareLeft: ${props =>
-    props.orientation === 'landscape'
-      ? `calc(var(--sideBezel)/2 - var(--topHardwareWidth)/2)`
-      : `calc(var(--width)/2 - var(--topHardwareWidth)/2)`};
+    (props.orientation === 'landscape'
+      ? 'calc(var(--sideBezel)/2 - var(--topHardwareWidth)/2)'
+      : 'calc(var(--width)/2 - var(--topHardwareWidth)/2)')};
   --webcamDiameter: ${props =>
-    props.orientation === 'landscape'
+    (props.orientation === 'landscape'
       ? `calc(${props.device.ratios.webcamDiameter} * var(--height))`
-      : `calc(${props.device.ratios.webcamDiameter} * var(--width))`};
+      : `calc(${props.device.ratios.webcamDiameter} * var(--width))`)};
   --receiverHeight: ${props =>
-    props.orientation === 'landscape'
+    (props.orientation === 'landscape'
       ? `calc(${props.device.ratios.receiver.height} * var(--height))`
-      : `calc(${props.device.ratios.receiver.height} * var(--width))`};
+      : `calc(${props.device.ratios.receiver.height} * var(--width))`)};
   --receiverWidth: ${props =>
-    props.orientation === 'landscape'
+    (props.orientation === 'landscape'
       ? `calc(${props.device.ratios.receiver.width} * var(--height))`
-      : `calc(${props.device.ratios.receiver.width} * var(--width))`};
+      : `calc(${props.device.ratios.receiver.width} * var(--width))`)};
 
   --appIconSize: ${props =>
-    props.orientation === 'landscape'
+    (props.orientation === 'landscape'
       ? `calc(${props.device.ratios.appSize} * var(--width))`
-      : `calc(${props.device.ratios.appSize} * var(--height))`};
+      : `calc(${props.device.ratios.appSize} * var(--height))`)};
   --appTitleHeight: 12px;
   --appHeight: calc(var(--appIconSize) + var(--appTitleHeight));
   --appWidth: var(--appIconSize);
@@ -120,6 +124,7 @@ const DeviceWrapper = styled.div`
 `;
 
 const Device = styled.div`
+  box-sizing: border-box;
   height: 100%;
   width: 100%;
 `;
@@ -128,13 +133,13 @@ function calculateDeviceDimensions(device, orientation) {
   const { height: displayHeight, width: displayWidth } = calculateByDiagonal(
     device.display.inches.aspectRatioHeight,
     device.display.inches.aspectRatioWidth,
-    device.display.inches.diagonal
+    device.display.inches.diagonal,
   );
   device.display.inches.height = displayHeight;
   device.display.inches.width = displayWidth;
   device.display.pixels.diagonal = calculateDiagonal(
     displayHeight,
-    displayWidth
+    displayWidth,
   );
   const hasReceiver = 'receiver' in device.size.inches;
   // inches to pixels relative to deice size
@@ -169,7 +174,7 @@ function calculateDeviceDimensions(device, orientation) {
   device.size.pixels.height = deviceSizePixelHeight;
   device.size.pixels.width = deviceSizePixelWidth;
   const deviceSizePixelApp =
-    (device.display.pixels.width - device.display.pixels.width * 0.05 * 7) / 7;
+    (device.display.pixels.width - (device.display.pixels.width * 0.05 * 7)) / 7;
   device.size.pixels.homeButtonDiameter = deviceSizePixelHomeButtonDiameter;
   device.size.pixels.webcamDiameter = deviceSizePixelWebcamDiameter;
   device.size.pixels.topHardware = {};
@@ -179,7 +184,7 @@ function calculateDeviceDimensions(device, orientation) {
 
   device.size.pixels.diagonal = calculateDiagonal(
     deviceSizePixelHeight,
-    deviceSizePixelWidth
+    deviceSizePixelWidth,
   );
   device.ratios = {};
   device.ratios.display = {};
@@ -306,12 +311,12 @@ const IOSGuiApp = ({
         orientation={orientation}
         color={color}
       >
-        {DEV_MODE && (
-          <>
-            <span className="deviceInterface horz"></span>
-            <span className="deviceInterface vert"></span>
-          </>
-        )}
+        {DEV_MODE &&
+          <Fragment>
+            <span className="deviceInterface horz" />
+            <span className="deviceInterface vert" />
+          </Fragment>
+        }
         <Hardware
           device={device}
           orientation={orientation}
@@ -321,12 +326,8 @@ const IOSGuiApp = ({
           <Screen
             device={device}
             orientation={orientation}
-            apps={apps.slice(0, 24).filter(function(element) {
-              return element !== undefined;
-            })}
-            homeApps={homeApps.slice(0, 4).filter(function(element) {
-              return element !== undefined;
-            })}
+            apps={apps.slice(0, 24).filter(element => element !== undefined)}
+            homeApps={homeApps.slice(0, 4).filter(element => element !== undefined)}
             setCurrentAppRefs={setCurrentAppRefs}
           />
         </Device>
@@ -336,13 +337,21 @@ const IOSGuiApp = ({
 };
 
 IOSGuiApp.propTypes = {
-  orientation: PropTypes.any,
-  width: PropTypes.any,
-  height: PropTypes.any,
-  deviceType: PropTypes.any,
-  color: PropTypes.any,
-  apps: PropTypes.any,
-  homeApps: PropTypes.any,
+  orientation: PropTypes.string,
+  width: PropTypes.number,
+  height: PropTypes.number,
+  deviceType: DeviceTypePropTypes,
+  color: PropTypes.string,
+  apps: AppsPropTypes,
+  homeApps: AppsPropTypes,
 };
-
+IOSGuiApp.defaultProps = {
+  orientation: 'landscape',
+  width: 0,
+  height: 0,
+  color: COLORS.white,
+  deviceType: DEVICES.ipad['2017'],
+  apps: Array.from({ length: 24 }),
+  homeApps: Array.from({ length: 4 }),
+};
 export default IOSGuiApp;

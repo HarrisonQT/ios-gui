@@ -1,8 +1,10 @@
 import React, { useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import { AppPropTypes } from './lib/PropTypesValues';
 
 const FullScreenAppStyles = styled.div`
+  box-sizing: border-box;
   position: absolute;
   height: var(--appHeight);
   width: var(--appWidth);
@@ -19,14 +21,15 @@ const FullScreenAppStyles = styled.div`
 const FullScreenApp = ({ app, setApp }) => {
   const ref = useRef(null);
   useEffect(() => {
+    /* eslint-disable-next-line no-param-reassign */
     app.fullScreenRef = ref.current;
   }, [app, setApp]);
   return <FullScreenAppStyles ref={ref}>{app.content}</FullScreenAppStyles>;
 };
 
 FullScreenApp.propTypes = {
-  app: PropTypes.any,
-  setApp: PropTypes.any,
+  app: AppPropTypes.isRequired,
+  setApp: PropTypes.func.isRequired,
 };
 
 export default FullScreenApp;

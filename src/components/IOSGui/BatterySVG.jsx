@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 const BatterySVGStyles = styled.svg`
+  box-sizing: border-box;
   enable-background: new 0 0 288 151.38;
   .st0 {
     fill: white;
@@ -27,7 +28,7 @@ const BatterySVG = props => (
       />
       <polygon
         className="st0"
-        points="25.69,127.25 245.61,127.25 245.61,24.91 25.69,24.91 25.69,127.25 	"
+        points="25.69,127.25 245.61,127.25 245.61,24.91 25.69,24.91 25.69,127.25"
       />
     </g>
   </BatterySVGStyles>

@@ -1,11 +1,12 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import BatterySVG from './BatterySVG';
 import WifiSVG from './WifiSVG';
+import { DevicePropTypes } from './lib/PropTypesValues';
 
 const DeviceScreenStatusBar = styled.div`
   top: 0;
+  box-sizing: border-box;
   left: 0;
   width: 100%;
   background-color: transparent;
@@ -20,6 +21,7 @@ const DeviceScreenStatusBar = styled.div`
     height: 100%;
   }
   .ipad {
+    box-sizing: border-box;
     svg {
       height: var(--statusBarHeight);
       min-height: 20px;
@@ -30,6 +32,7 @@ const DeviceScreenStatusBar = styled.div`
   .time,
   .ipad,
   .battery {
+    box-sizing: border-box;
     display: flex;
     align-items: center;
   }
@@ -73,7 +76,7 @@ const StatusBar = ({ device }) => {
 };
 
 StatusBar.propTypes = {
-  device: PropTypes.any,
+  device: DevicePropTypes.isRequired,
 };
 
 export default StatusBar;

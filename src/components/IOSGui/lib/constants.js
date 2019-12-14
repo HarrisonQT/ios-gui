@@ -72,7 +72,7 @@ const DEVICES = {
     },
   },
   ipad: {
-    '2017': {
+    2017: {
       // https://support.apple.com/kb/SP751?locale=en_US
       name: 'iPad',
       appGrid: APP_GRID.ipad,

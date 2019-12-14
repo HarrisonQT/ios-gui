@@ -1,13 +1,16 @@
-import React, { useRef } from 'react';
+import React, { Fragment, useRef } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import { AppPropTypes } from './lib/PropTypesValues';
 
 const DeviceAppWrapper = styled.button`
+  box-sizing: border-box;
+  box-sizing: border-box;
   height: 100%;
   width: 100%;
   display: flex;
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  font-size: 1rem;
+  font-size: 10px;
   color: white;
   justify-content: center;
   align-items: center;
@@ -15,6 +18,8 @@ const DeviceAppWrapper = styled.button`
   border: none;
 `;
 const DeviceAppIconWrapper = styled.div`
+  box-sizing: border-box;
+  box-sizing: border-box;
   height: var(--appIconSize);
   width: var(--appIconSize);
   border-radius: 20%;
@@ -24,15 +29,19 @@ const DeviceAppIconWrapper = styled.div`
   overflow: hidden;
   position: relative;
   & > * {
+    box-sizing: border-box;
     height: 100%;
     width: 100%;
   }
 `;
 const DeviceAppTitle = styled.div`
+  box-sizing: border-box;
+  margin-top: 1.5px;
   text-align: center;
   white-space: nowrap;
 `;
 const DeviceApp = styled.div`
+  box-sizing: border-box;
   height: auto;
   width: auto;
   display: flex;
@@ -40,12 +49,18 @@ const DeviceApp = styled.div`
   align-content: space-between;
   flex-wrap: wrap;
 `;
-const App = ({ app, deviceScreenRef, setCurrentAppRefs, homeRow }) => {
+
+const App = ({
+  app, deviceScreenRef, setCurrentAppRefs, homeRow,
+}) => {
   const iconRefWrapper = useRef(null);
   const appRef = useRef(null);
   async function handleAppClick() {
+    // eslint-disable-next-line no-param-reassign
     app.ref = appRef;
+    // eslint-disable-next-line react/prop-types
     await setCurrentAppRefs(app.fullScreenRef, app.ref.current);
+    // eslint-disable-next-line react/prop-types
     app.fullScreenRef.classList.add('fullScreenAppActive');
     if (!iconRefWrapper.current) return;
     const refCoords = iconRefWrapper.current.getBoundingClientRect();
@@ -53,22 +68,27 @@ const App = ({ app, deviceScreenRef, setCurrentAppRefs, homeRow }) => {
     const coords = {
       height: refCoords.height,
       width: refCoords.width,
-      top: refCoords.top - deviceScreenRefCoords.top - refCoords.height / 2,
-      left: refCoords.left - deviceScreenRefCoords.left + refCoords.width / 2,
+      top: refCoords.top - (deviceScreenRefCoords.top - (refCoords.height / 2)),
+      left: refCoords.left - (deviceScreenRefCoords.left + (refCoords.width / 2)),
     };
 
-    app.fullScreenRef.style.setProperty('width', `100%`);
-    app.fullScreenRef.style.setProperty('height', `100%`);
-    app.fullScreenRef.style.left = `${coords.left}px`;
-    app.fullScreenRef.style.top = `${coords.top}px`;
+    // eslint-disable-next-line react/prop-types
+    app.fullScreenRef.style.setProperty('width', '100%');
+    // eslint-disable-next-line react/prop-types
+    app.fullScreenRef.style.setProperty('height', '100%');
+    // eslint-disable-next-line react/prop-types
+    app.fullScreenRef.style.setProperty('left', `${coords.left}`);
+    // eslint-disable-next-line react/prop-types
+    app.fullScreenRef.style.setProperty('top', `${coords.top}`);
 
+    // eslint-disable-next-line react/prop-types
     app.fullScreenRef.style.setProperty(
       'transform',
-      `translate(-${coords.left}px, -${coords.top}px)`
+      `translate(-${coords.left}px, -${coords.top}px)`,
     );
   }
   return (
-    <>
+    <Fragment>
       {app && (
         <DeviceAppWrapper
           className="deviceAppWrapper"
@@ -84,15 +104,20 @@ const App = ({ app, deviceScreenRef, setCurrentAppRefs, homeRow }) => {
           </DeviceApp>
         </DeviceAppWrapper>
       )}
-    </>
+    </Fragment>
   );
 };
 
 App.propTypes = {
-  app: PropTypes.any,
-  setCurrentAppRefs: PropTypes.any,
-  deviceScreenRef: PropTypes.any,
-  homeRow: PropTypes.any,
+  app: AppPropTypes.isRequired,
+  setCurrentAppRefs: PropTypes.func.isRequired,
+  deviceScreenRef: PropTypes.shape({
+    current: PropTypes.instanceOf(HTMLDivElement),
+  }).isRequired,
+  homeRow: PropTypes.bool,
+};
+App.defaultProps = {
+  homeRow: false,
 };
 
 export default App;
