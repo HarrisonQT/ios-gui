@@ -56,11 +56,9 @@ const App = ({
   const iconRefWrapper = useRef(null);
   const appRef = useRef(null);
   async function handleAppClick() {
-    // eslint-disable-next-line no-param-reassign
+    /* eslint-disable react/prop-types, no-param-reassign */
     app.ref = appRef;
-    // eslint-disable-next-line react/prop-types
     await setCurrentAppRefs(app.fullScreenRef, app.ref.current);
-    // eslint-disable-next-line react/prop-types
     app.fullScreenRef.classList.add('fullScreenAppActive');
     if (!iconRefWrapper.current) return;
     const refCoords = iconRefWrapper.current.getBoundingClientRect();
@@ -71,21 +69,15 @@ const App = ({
       top: refCoords.top - (deviceScreenRefCoords.top - (refCoords.height / 2)),
       left: refCoords.left - (deviceScreenRefCoords.left + (refCoords.width / 2)),
     };
-
-    // eslint-disable-next-line react/prop-types
     app.fullScreenRef.style.setProperty('width', '100%');
-    // eslint-disable-next-line react/prop-types
     app.fullScreenRef.style.setProperty('height', '100%');
-    // eslint-disable-next-line react/prop-types
-    app.fullScreenRef.style.setProperty('left', `${coords.left}`);
-    // eslint-disable-next-line react/prop-types
-    app.fullScreenRef.style.setProperty('top', `${coords.top}`);
-
-    // eslint-disable-next-line react/prop-types
+    app.fullScreenRef.style.left = `${coords.left}px`;
+    app.fullScreenRef.style.top = `${coords.top}px`;
     app.fullScreenRef.style.setProperty(
       'transform',
       `translate(-${coords.left}px, -${coords.top}px)`,
     );
+    /* eslint-enable react/prop-types, no-param-reassign */
   }
   return (
     <Fragment>
