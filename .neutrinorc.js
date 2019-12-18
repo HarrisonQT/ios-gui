@@ -1,6 +1,3 @@
-const {basename, join} = require('path');
-const { Neutrino
-} = require('neutrino');
 module.exports = {
   use: [
     ['@neutrinojs/airbnb',

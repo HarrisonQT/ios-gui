@@ -42,7 +42,7 @@ const apps = [
     ),
   },
 ];
-// const homeRowApps = [...IOS_APPS.slice(5, 9)];
+
 render(
   (
     <IOSGui
